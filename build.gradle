@@ -3,6 +3,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.0"
@@ -16,31 +17,11 @@ allprojects {
     repositories {
         google()
         jcenter()
-
+        maven { url 'https://jitpack.io' }
     }
 }
 
-allprojects {
-    repositories {
-        maven {
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven {
-            credentials {
-                username '5f0c1af14c4e70fdbf9e26c6'
-                password 'd7I)7(NdDOcw'
-            }
-            url 'https://packages.aliyun.com/maven/repository/2016367-release-GHmELg/'
-        }
-        maven {
-            credentials {
-                username '5f0c1af14c4e70fdbf9e26c6'
-                password 'd7I)7(NdDOcw'
-            }
-            url 'https://packages.aliyun.com/maven/repository/2016367-snapshot-yufnfx/'
-        }
-    }
-}
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
