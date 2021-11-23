@@ -33,7 +33,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.miotlink.bluetooth:ISmartBluetoothSDK:1.0.11'
+    implementation 'com.github.Miotlink:ISmartBluetoothSDK:1.1.0'
     implementation('com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4')
     implementation 'com.permissionx.guolindev:permissionx:1.4.0'
     implementation 'me.jessyan:autosize:1.2.1'
