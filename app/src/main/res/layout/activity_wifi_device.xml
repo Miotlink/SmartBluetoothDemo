@@ -118,6 +118,14 @@
            android:background="@drawable/shape_round_blue"
            android:layout_width="match_parent"
            android:layout_height="50dp"/>
+       <TextView
+           android:id="@+id/route_value_tv"
+           android:text="TP-LINK"
+           android:textSize="16dp"
+           android:layout_marginTop="40dp"
+           android:textColor="@color/black"
+           android:layout_width="wrap_content"
+           android:layout_height="50dp"/>
    </LinearLayout>
 
 
