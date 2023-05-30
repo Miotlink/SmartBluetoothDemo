@@ -18,10 +18,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(getContentView());
-            mContext=this;
-            initView();
             StatusBarUtils.setColor(mContext, getResources().getColor(R.color.white));
             StatusBarUtils.setTextDark(mContext,true);
+            mContext=this;
+            initView();
+
+            initData();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -30,4 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public abstract void initView()throws Exception;
 
     public abstract int getContentView();
+
+    public abstract void initData()throws Exception;
 }

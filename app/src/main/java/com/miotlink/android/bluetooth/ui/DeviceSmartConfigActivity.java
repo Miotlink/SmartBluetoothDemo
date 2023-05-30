@@ -22,7 +22,7 @@ import com.miotlink.android.bluetooth.view.RadarView;
 import com.miotlink.android.bluetooth.view.StatusBarUtils;
 import com.miotlink.ble.listener.ILinkSmartConfigListener;
 
-public class DeviceSmartConfigActivity extends BaseActivity {
+public class DeviceSmartConfigActivity extends BaseActivity implements ILinkSmartConfigListener {
 
     public static void startIntent(Context mContext,Bundle bundle){
         Intent intent=new Intent(mContext,DeviceSmartConfigActivity.class);
@@ -33,13 +33,15 @@ public class DeviceSmartConfigActivity extends BaseActivity {
     private TextView routeNameTv;
     private EditText routePassEv;
     private Button startButton;
-
+    private TextView resTv;
     private RelativeLayout relativeLayout;
     String routeName="";
     String routePass="";
     private boolean isStart=false;
     private String macCode="";
     private RadarView radarView=null;
+
+    private int configType=0;
 
     @Override
     public void initView() throws Exception {
@@ -48,11 +50,13 @@ public class DeviceSmartConfigActivity extends BaseActivity {
         WifiManager wifiManager= (WifiManager) mContext.getSystemService(WIFI_SERVICE);
 
         macCode=getIntent().getStringExtra("macCode");
+        configType=getIntent().getIntExtra("configType",0);
         routeNameTv=findViewById(R.id.route_name_tv);
         routePassEv=findViewById(R.id.route_password_tv);
         startButton=findViewById(R.id.start_smart);
         relativeLayout=findViewById(R.id.scan_blue_rl);
         radarView=findViewById(R.id.radar);
+        resTv=findViewById(R.id.route_value_tv);
         if (wifiManager!=null){
             if (wifiManager.isWifiEnabled()){
                 WifiInfo connectionInfo = wifiManager.getConnectionInfo();
@@ -65,69 +69,33 @@ public class DeviceSmartConfigActivity extends BaseActivity {
                 }
             }
         }
-        startButton.setOnClickListener((view)->{
-            if (isStart){
-                Toast.makeText(mContext,"配网中",Toast.LENGTH_SHORT).show();
+        startButton.setOnClickListener((view)-> {
+            if (isStart) {
+                Toast.makeText(mContext, "配网中", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            routeName=routeNameTv.getText().toString();
-            routePass=routePassEv.getText().toString();
-            if (TextUtils.isEmpty(routeName)){
-                Toast.makeText(mContext,"输入路由器账户",Toast.LENGTH_SHORT).show();
+            routeName = routeNameTv.getText().toString();
+            routePass = routePassEv.getText().toString();
+            if (TextUtils.isEmpty(routeName)) {
+                Toast.makeText(mContext, "输入路由器账户", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (TextUtils.isEmpty(routePass)){
-                Toast.makeText(mContext,"输入路由器密码",Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(routePass)) {
+                Toast.makeText(mContext, "输入路由器密码", Toast.LENGTH_SHORT).show();
                 return;
             }
-            isStart=true;
+            isStart = true;
             radarView.start();
             relativeLayout.setVisibility(View.VISIBLE);
-            MiotSmartBluetoothSDK.getInstance().startSmartConfig(macCode, routeName, routePass, 60, new ILinkSmartConfigListener() {
-                @Override
-                public void onLinkSmartConfigListener(int i, String s, String s1) throws Exception {
-                    isStart=false;
-
-                    MiotSmartBluetoothSDK.getInstance().onDisConnect();
-                    if (i==7015){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                radarView.stop();
-                                relativeLayout.setVisibility(View.GONE);
-                                Toast.makeText(mContext, "配网成功", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                radarView.stop();
-                                relativeLayout.setVisibility(View.GONE);
-                                Toast.makeText(mContext, s, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onLinkSmartConfigTimeOut(int i, String s) throws Exception {
-                    isStart=false;
-                    radarView.stop();
-                    relativeLayout.setVisibility(View.GONE);
-                    MiotSmartBluetoothSDK.getInstance().onDisConnect();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            radarView.stop();
-                            relativeLayout.setVisibility(View.GONE);
-                            Toast.makeText(mContext, s, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
+            MiotSmartBluetoothSDK.getInstance().setDeviceInfo(true);
+            if (configType == 0) {
+                MiotSmartBluetoothSDK.getInstance().startSmartConfig(macCode, routeName, routePass, 60, this);
+            }else {
+                MiotSmartBluetoothSDK.getInstance().smartConfig(macCode, routeName, routePass, 60, this);
+            }
         });
+
     }
 
     @Override
@@ -137,7 +105,71 @@ public class DeviceSmartConfigActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MiotSmartBluetoothSDK.getInstance().onStopSmartConfig(macCode);
+    }
+
+    @Override
+    public void initData() throws Exception {
+
+    }
+
+    @Override
     public int getContentView() {
         return R.layout.activity_wifi_device;
     }
+
+    @Override
+    public void onLinkSmartConfigListener(int error, String errorMessage, String data) throws Exception {
+        isStart=false;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                radarView.stop();
+                relativeLayout.setVisibility(View.GONE);
+                resTv.setText(data);
+            }
+        });
+        if (error==7015){
+            MiotSmartBluetoothSDK.getInstance().onStopSmartConfig(macCode);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    radarView.stop();
+                    relativeLayout.setVisibility(View.GONE);
+                    Toast.makeText(mContext, "配网成功", Toast.LENGTH_SHORT).show();
+                    resTv.setText(data);
+                }
+            });
+        }else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    radarView.stop();
+                    relativeLayout.setVisibility(View.GONE);
+                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onLinkSmartConfigTimeOut(int errorCode, String errorMessage) throws Exception {
+        isStart=false;
+        radarView.stop();
+        relativeLayout.setVisibility(View.GONE);
+        MiotSmartBluetoothSDK.getInstance().onStopSmartConfig(macCode);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                radarView.stop();
+                relativeLayout.setVisibility(View.GONE);
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }

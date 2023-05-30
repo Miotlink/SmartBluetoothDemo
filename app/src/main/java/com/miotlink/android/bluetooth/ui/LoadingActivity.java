@@ -52,4 +52,8 @@ public class LoadingActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void initData() throws Exception {
+
+    }
 }

@@ -8,6 +8,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.miotlink.MiotSmartBluetoothSDK;
@@ -15,31 +21,28 @@ import com.miotlink.android.bluetooth.R;
 import com.miotlink.android.bluetooth.adapter.ScanDeviceAdapter;
 import com.miotlink.android.bluetooth.base.BaseActivity;
 import com.miotlink.android.bluetooth.view.RadarView;
-import com.miotlink.ble.Ble;
-import com.miotlink.ble.callback.BleScanCallback;
-import com.miotlink.ble.callback.BleStatusCallback;
+import com.miotlink.ble.BleLog;
 import com.miotlink.ble.listener.ILinkBlueScanCallBack;
-import com.miotlink.ble.listener.SmartNotifyListener;
-import com.miotlink.ble.model.BleEntityData;
 import com.miotlink.ble.model.BleModelDevice;
 import com.miotlink.ble.model.BluetoothDeviceStore;
 import com.miotlink.ble.utils.Utils;
+import com.miotlink.protocol.BluetoothProtocol;
+import com.miotlink.protocol.BluetoothProtocolImpl;
+import com.miotlink.utils.HexUtil;
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
 
 public
 class ScanDeviceActivity extends BaseActivity implements ILinkBlueScanCallBack {
 
     private RecyclerView recyclerView;
     private ScanDeviceAdapter scanDeviceAdapter=null;
-    private BluetoothDeviceStore bluetoothDeviceStore=new BluetoothDeviceStore();
+
 
     private TextView textView;
+
+    private List<BleModelDevice> list=new ArrayList<>();
 
     private RadarView radarView=null;
     @Override
@@ -54,16 +57,16 @@ class ScanDeviceActivity extends BaseActivity implements ILinkBlueScanCallBack {
         recyclerView.getItemAnimator().setChangeDuration(300);
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.setAdapter(scanDeviceAdapter);
-        initBleStatus();
+
 
         scanDeviceAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                 BleModelDevice item = (BleModelDevice)adapter.getItem(position);
                 Bundle bundle=new Bundle();
+                bundle.putParcelable("device",item);
                 bundle.putString("macCode",item.getMacAddress());
-                DeviceSmartConfigActivity.startIntent(mContext,bundle);
-//                mContext.startActivity(new Intent(mContext,DeviceSmartConfigActivity.class));
+                DeviceInfoActivity.startIntent(mContext,bundle);
             }
         });
     }
@@ -73,16 +76,18 @@ class ScanDeviceActivity extends BaseActivity implements ILinkBlueScanCallBack {
         return R.layout.activity_sacn_device;
     }
 
-    private void initBleStatus() {
 
+
+    @Override
+    public void initData() throws Exception {
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        bluetoothDeviceStore.clear();
-        scanDeviceAdapter.setNewInstance(bluetoothDeviceStore.getDeviceList());
+       list.clear();
+        scanDeviceAdapter.setNewInstance(list);
         checkGpsStatus();
         if (radarView!=null){
             radarView.start();
@@ -99,11 +104,9 @@ class ScanDeviceActivity extends BaseActivity implements ILinkBlueScanCallBack {
     @Override
     protected void onStop() {
         super.onStop();
-
         if (radarView!=null){
             radarView.stop();
         }
-
         MiotSmartBluetoothSDK.getInstance().onStopScan();
     }
 
@@ -131,13 +134,9 @@ class ScanDeviceActivity extends BaseActivity implements ILinkBlueScanCallBack {
 
     @Override
     public void onScanDevice(BleModelDevice bleModelDevice) throws Exception {
-
-        if (!TextUtils.isEmpty(bleModelDevice.getBleName())){
-                if (!bluetoothDeviceStore.getDeviceMap().containsKey(bleModelDevice.getBleAddress())){
-                    bluetoothDeviceStore.addDevice(bleModelDevice);
-                    scanDeviceAdapter.setNewInstance(bluetoothDeviceStore.getDeviceList());
-                }
-            }
+        list.add(bleModelDevice);
+        scanDeviceAdapter.setNewInstance(list);
+        scanDeviceAdapter.notifyDataSetChanged();
     }
 
 }
