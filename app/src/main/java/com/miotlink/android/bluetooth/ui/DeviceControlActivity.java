@@ -165,21 +165,5 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
 
     }
 
-    SmartNotifyUartDataListener smartNotifyUartDataListener=new SmartNotifyUartDataListener() {
-        @Override
-        public void notifyUartData(String macCode, String uart) {
-
-        }
-
-        @Override
-        public void notifyDeviceWifiInfo(String macCode, String uart) {
-
-        }
-
-        @Override
-        public void notifyFail(int errorCode, String errorMessage) {
-
-        }
-    }
 
 }

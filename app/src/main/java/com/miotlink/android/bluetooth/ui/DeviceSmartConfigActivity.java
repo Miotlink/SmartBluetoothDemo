@@ -88,12 +88,7 @@ public class DeviceSmartConfigActivity extends BaseActivity implements ILinkSmar
             isStart = true;
             radarView.start();
             relativeLayout.setVisibility(View.VISIBLE);
-            MiotSmartBluetoothSDK.getInstance().setDeviceInfo(true);
-            if (configType == 0) {
-                MiotSmartBluetoothSDK.getInstance().startSmartConfig(macCode, routeName, routePass, 60, this);
-            }else {
-                MiotSmartBluetoothSDK.getInstance().smartConfig(macCode, routeName, routePass, 60, this);
-            }
+            MiotSmartBluetoothSDK.getInstance().smartConfig(macCode, routeName, routePass, 60, this);
         });
 
     }
