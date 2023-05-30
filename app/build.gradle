@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
     buildToolsVersion "30.0.1"
 
     defaultConfig {
         applicationId "com.miotlink.android.bluetooth"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -24,16 +24,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'   // aar目录
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+//    implementation project(path: ':miot-blue-smart')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.github.Miotlink:ISmartBluetoothSDK:1.1.0'
+    implementation 'com.github.Miotlink:IotSmartBluetoothSDK:1.0.2'
+//    api(name: 'miot-blue-smart-release', ext: 'aar')
     implementation('com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4')
     implementation 'com.permissionx.guolindev:permissionx:1.4.0'
     implementation 'me.jessyan:autosize:1.2.1'
