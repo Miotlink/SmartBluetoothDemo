@@ -13,4 +13,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="text">#ffffff</color>
     <color name="color_1E232B">#1E232B</color>
+    <color name="custom_progress_blue_progress">#ff0099cc</color>
+    <color name="background_dark">#ff363636</color>
 </resources>

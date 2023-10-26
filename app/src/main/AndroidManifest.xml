@@ -25,6 +25,13 @@
             android:name=".ui.ScanDeviceActivity"/>
         <activity
             android:screenOrientation="portrait"
+            android:name=".ui.BleCheckControllerActivity"/>
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.BleControllerTestActivity"/>
+        <activity
+            android:screenOrientation="portrait"
             android:name=".ui.DeviceInfoActivity"/>
 
         <activity

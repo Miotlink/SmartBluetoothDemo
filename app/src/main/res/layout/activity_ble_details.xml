@@ -191,7 +191,7 @@
         android:id="@+id/send_ble_btn"
         android:background="@drawable/radius_a4afb3"
         android:layout_marginTop="30dp"
-        android:text="控制"
+        android:text="下一步"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
@@ -201,6 +201,7 @@
         android:background="@drawable/radius_a4afb3"
         android:visibility="gone"
         android:text="Wi-Fi 配网"
+
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
@@ -210,6 +211,7 @@
         android:id="@+id/rz_ble_btn"
         android:background="@drawable/radius_a4afb3"
         android:text="如泽Wi-Fi配网"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 

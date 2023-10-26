@@ -1,18 +1,44 @@
 package com.miotlink.android.bluetooth.base;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-
-
-import com.miotlink.android.bluetooth.R;
-import com.miotlink.android.bluetooth.view.StatusBarUtils;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.miotlink.android.bluetooth.R;
+import com.miotlink.android.bluetooth.view.StatusBarUtils;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Context mContext;
+
+    /** The dlg. */
+    protected ProgressDialog dlg;
+
+    /**
+     * Show progress dialog.
+     */
+    public void showProgressDialog() {
+        if (dlg == null) {
+            dlg = new ProgressDialog(mContext);
+            dlg.setMessage("获取数据中,请耐心等待");
+            dlg.setCanceledOnTouchOutside(false);
+        }
+        if (!dlg.isShowing())
+            dlg.show();
+    }
+
+    /**
+     * Cancel progress dialog.
+     */
+    public void cancelProgressDialog() {
+        if (dlg != null && dlg.isShowing()) {
+            dlg.cancel();
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

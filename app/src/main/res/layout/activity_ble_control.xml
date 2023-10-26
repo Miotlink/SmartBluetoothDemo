@@ -1,134 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:ignore="MissingDefaultResource">
 
-    <RelativeLayout
-        android:id="@+id/device_update_title_rl"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/text">
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/device_update_title_rl"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/text">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/device_update_title_tv_login"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/img"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="10dp"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/device_update_title_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="设备数据控制"
+                android:textColor="@color/color_1E232B"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="#d8d8d8"/>
+
+            <TextView
+                android:id="@+id/ble_state_tv"
+                android:textColor="@color/color_1E232B"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:text="未连接"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/device_update_title_tv_login"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/img"
-                android:layout_marginLeft="4dp"
-                android:paddingLeft="10dp"
-                />
-
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="发送数据:"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_1E232B"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/send_ble_hex_et"
+                android:hint="请输入串口数据"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/device_update_title_tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="设备数据控制"
-            android:textColor="@color/color_1E232B"
-            android:textSize="18dp"
-            android:textStyle="bold" />
 
-        <View
+
+
+        <Button
+            android:layout_margin="20dp"
+            android:id="@+id/send_hex_btn"
+            android:background="@drawable/radius_a4afb3"
+            android:layout_marginTop="30dp"
+            android:text="发送"
+            android:visibility="gone"
+            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentBottom="true"
-            android:background="#d8d8d8"/>
-
-        <TextView
-            android:id="@+id/ble_state_tv"
-            android:textColor="@color/color_1E232B"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:text="未连接"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="发送数据:"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_1E232B"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/send_ble_hex_et"
-            android:hint="请输入串口数据"
+            android:layout_height="50dp"/>
+        <Button
+            android:layout_margin="20dp"
+            android:id="@+id/get_wifiinfo_btn"
+            android:background="@drawable/radius_a4afb3"
+            android:layout_marginTop="30dp"
+            android:text="查询模组信息"
+            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="50dp"/>
+
+        <Button
+            android:layout_margin="20dp"
+            android:id="@+id/product_test_btn"
+            android:background="@drawable/radius_a4afb3"
+            android:layout_marginTop="30dp"
+            android:text="产测"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+
+        <Button
+            android:layout_margin="20dp"
+            android:id="@+id/ota_btn"
+            android:background="@drawable/radius_a4afb3"
+            android:layout_marginTop="30dp"
+            android:text="OTA"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+
+
+
+
+            <LinearLayout
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                    <TextView
+                        android:text="接收数据:"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_1E232B"
+                        android:textSize="16dp"
+                        android:layout_centerVertical="true"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/clean_data"
+                        android:text="清除数据"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_1E232B"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+                <TextView
+                    android:text="接收数据:"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_1E232B"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/receiver_ble_hex"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
     </LinearLayout>
 
 
 
 
-    <Button
-        android:layout_margin="20dp"
-        android:id="@+id/send_hex_btn"
-        android:background="@drawable/radius_a4afb3"
-        android:layout_marginTop="30dp"
-        android:text="发送"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
-    <Button
-        android:layout_margin="20dp"
-        android:id="@+id/get_wifiinfo_btn"
-        android:background="@drawable/radius_a4afb3"
-        android:layout_marginTop="30dp"
-        android:text="查询模组信息"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
-
-    <Button
-        android:layout_margin="20dp"
-        android:id="@+id/ota_btn"
-        android:background="@drawable/radius_a4afb3"
-        android:layout_marginTop="30dp"
-        android:text="OTA"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
 
 
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="接收数据:"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_1E232B"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/receiver_ble_hex"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-
-
-</LinearLayout>
+</ScrollView>

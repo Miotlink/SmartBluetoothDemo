@@ -127,27 +127,27 @@ public class DeviceSmartConfigActivity extends BaseActivity implements ILinkSmar
                 resTv.setText(data);
             }
         });
-        if (error==7015){
-            MiotSmartBluetoothSDK.getInstance().onStopSmartConfig(macCode);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    radarView.stop();
-                    relativeLayout.setVisibility(View.GONE);
-                    Toast.makeText(mContext, "配网成功", Toast.LENGTH_SHORT).show();
-                    resTv.setText(data);
-                }
-            });
-        }else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    radarView.stop();
-                    relativeLayout.setVisibility(View.GONE);
-                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+//        if (error==7015){
+//            MiotSmartBluetoothSDK.getInstance().onStopSmartConfig(macCode);
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    radarView.stop();
+//                    relativeLayout.setVisibility(View.GONE);
+//                    Toast.makeText(mContext, "配网成功", Toast.LENGTH_SHORT).show();
+//                    resTv.setText(data);
+//                }
+//            });
+//        }else {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    radarView.stop();
+//                    relativeLayout.setVisibility(View.GONE);
+//                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
     }
 
     @Override

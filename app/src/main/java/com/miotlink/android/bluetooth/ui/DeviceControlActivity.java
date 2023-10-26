@@ -16,20 +16,20 @@ import com.miotlink.android.bluetooth.R;
 import com.miotlink.android.bluetooth.base.BaseActivity;
 import com.miotlink.android.bluetooth.view.LoadingViewDialog;
 import com.miotlink.ble.listener.SmartNotifyDeviceConnectListener;
-import com.miotlink.ble.listener.SmartNotifyOTAListener;
 import com.miotlink.ble.listener.SmartNotifyUartDataListener;
 import com.miotlink.ble.model.BleModelDevice;
+import com.miotlink.utils.HexUtil;
 
 public class DeviceControlActivity extends BaseActivity implements  View.OnClickListener, SmartNotifyDeviceConnectListener, SmartNotifyUartDataListener {
 
 
     private TextView ble_state_tv;
 
-    private Button send_hex_btn,get_wifiinfo_btn,ota_btn;
+    private Button send_hex_btn,get_wifiinfo_btn,ota_btn,product_test_btn;
 
     private EditText send_ble_hex_et;
 
-    private TextView receiver_ble_hex;
+    private TextView receiver_ble_hex,clean_data;
 
     private BleModelDevice bleModelDevice=null;
 
@@ -38,6 +38,7 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
     private LoadingViewDialog loadingViewDialog=null;
 
     private String uartdata="";
+
 
     public static void startIntent(Context mContext, Bundle bundle){
         Intent intent=new Intent(mContext,DeviceControlActivity.class);
@@ -48,12 +49,16 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
     public void initView() throws Exception {
         loadingViewDialog=new LoadingViewDialog(mContext);
         ble_state_tv=findViewById(R.id.ble_state_tv);
+        clean_data=findViewById(R.id.clean_data);
         send_hex_btn=findViewById(R.id.send_hex_btn);
         get_wifiinfo_btn=findViewById(R.id.get_wifiinfo_btn);
         ota_btn=findViewById(R.id.ota_btn);
         send_ble_hex_et=findViewById(R.id.send_ble_hex_et);
         receiver_ble_hex=findViewById(R.id.receiver_ble_hex);
+        product_test_btn=findViewById(R.id.product_test_btn);
+        product_test_btn.setOnClickListener(this);
         send_hex_btn.setOnClickListener(this);
+        clean_data.setOnClickListener(this);
         get_wifiinfo_btn.setOnClickListener(this);
         ota_btn.setOnClickListener(this);
     }
@@ -65,6 +70,7 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
 
     @Override
     protected void onDestroy() {
+        MiotSmartBluetoothSDK.getInstance().disConnect(bleModelDevice.getMacAddress());
         super.onDestroy();
     }
 
@@ -110,6 +116,9 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
 
     @Override
     public void onClick(View v) {
+        Bundle bundle=new Bundle();
+        bundle.putParcelable("device",bleModelDevice);
+        bundle.putString("macCode",bleModelDevice.getMacAddress());
         switch (v.getId()){
             case R.id.send_hex_btn:
                 if (TextUtils.isEmpty(send_ble_hex_et.getText())){
@@ -121,16 +130,17 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
                 MiotSmartBluetoothSDK.getInstance().sendUartData(bleModelDevice.getMacAddress(),s.getBytes(),this);
                 break;
             case R.id.ota_btn:
-                MiotSmartBluetoothSDK.getInstance().setSmartNotifyOTAListener(new SmartNotifyOTAListener() {
-                    @Override
-                    public void notifyOtaData(String data) {
-
-                    }
-                });
-                MiotSmartBluetoothSDK.getInstance().startOtaOnline(bleModelDevice.getMacAddress(), 0, "", "53D161924A09210C8735867705E01E50", "https://yair.51miaomiao.cn/miotlink/thirdFactory/upgrade", 0);
                 break;
             case R.id.get_wifiinfo_btn:
-                MiotSmartBluetoothSDK.getInstance().getDeviceInfo(bleModelDevice.getMacAddress());
+                BleCheckControllerActivity.startIntent(mContext,bundle);
+                break;
+            case R.id.product_test_btn:
+                BleControllerTestActivity.startIntent(mContext,bundle);
+                break;
+
+            case R.id.clean_data:
+                uartdata="";
+                receiver_ble_hex.setText(uartdata);
                 break;
         }
     }
@@ -154,7 +164,14 @@ public class DeviceControlActivity extends BaseActivity implements  View.OnClick
 
             @Override
             public void run() {
-                uartdata+=uart+"\n";
+                byte[] bytes = HexUtil.decodeHex(uart);
+                String uartStr="";
+                try {
+                    uartStr=new String(bytes,"UTF-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                uartdata+=uartStr+"\r\n";
                 receiver_ble_hex.setText(uartdata);
             }
         });
